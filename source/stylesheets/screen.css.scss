@@ -173,7 +173,6 @@ html, body {
 
   // This is the currently selected ToC entry
   .tocify-focus {
-    box-shadow: 0px 1px 0px $nav-active-shadow;
     background-color: $nav-active-bg;
     color: $nav-active-text;
   }
@@ -190,7 +189,6 @@ html, body {
     }
 
     // for embossed look:
-    @include embossed-bg;
     &>li:last-child {
       box-shadow: none; // otherwise it'll overflow out of the subheader
     }
@@ -217,6 +215,19 @@ html, body {
     }
   }
 
+}
+
+.logo-container {
+  display: flex;
+  height: 200px;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+
+  img {
+    width: 60%;
+    flex: 0 0 60%;
+  }
 }
 
 // button to show navigation on mobile devices
@@ -397,7 +408,7 @@ html, body {
   }
 
   h4, h5, h6 {
-    font-size: 10px;
+    font-size: 12px;
   }
 
   hr {
@@ -625,4 +636,9 @@ html, body {
 
 .highlight, .highlight .w {
   background-color: $code-bg;
+}
+
+.cp_embed_wrapper {
+  margin-right: 50%;
+  padding: 0 28px;
 }
