@@ -27,7 +27,7 @@ This documentation the differents functionalities of the library and how to use 
 	</head>
 	<body>
 		<!-- Your web content -->
-		<script src="https://library.prototypo.io/ptypo.js"></script>
+		<script src="https://library.v2.prototypo.io/library.js"></script>
 	</body>
 </html>
 ```
@@ -42,6 +42,14 @@ var prototypoFontFactory = new Ptypo.default('cf74462a-4a23-4b3a-b0e6-95334f4118
 
 ```javascript
 var prototypoFontFactory = new Ptypo.default();
+```
+
+> You now have to init the library using the following code:
+
+```javascript
+prototypoFontFactory.init().then(function() {
+	//All the code using the prototypoFontFactory should be done there
+})
 ```
 
 If your subscribed to Prototypo the first thing you'll need to do is go to the Prototypo App to get you library token. This token we'll let you download the full templates from Prototypo. If your not subscribed to Prototypo your template will contain all the latin uppercases, lowercases and figures.
@@ -61,10 +69,11 @@ Once you imported your script and created your font factory. It's time to create
 > Font creation example
 
 ```javascript
-prototypoFontFactory.createFont('nameOfYourFont', Ptypo.templateNames.ELZEVIR)
-	.then(function(font) {
-		//You'll be able to modify your font here
-	});
+prototypoFontFactory.init().then(function() {
+	return prototypoFontFactory.createFont('nameOfYourFont', Ptypo.templateNames.ELZEVIR)
+}).then(function(font) {
+	//You'll be able to modify your font here
+})
 ```
 
 > Basic html and css example for font styling
@@ -94,17 +103,17 @@ Replace <code>nameOfYourfont</code> by the name of your choice. All the template
 > Parameter change example
 
 ```javascript
-prototypoFontFactory.createFont('nameOfYourFont', Ptypo.templateNames.ELZEVIR)
-	.then(function(font) {
-		font.changeParam('thickness', 100);
-		font.changeParams({
-			xHeight: 600,
-			width: 1.1,
-		});
+prototypoFontFactory.init().then(function() {
+	return prototypoFontFactory.createFont('nameOfYourFont', Ptypo.templateNames.ELZEVIR)
+}).then(function(font) {
+	font.changeParams({
+		xHeight: 600,
+		width: 1.1,
 	});
+});
 ```
 
-Changing the parameters of the font is as easy as creating it. Just call the `changeParam` method on the object returned by `createFont`. You can see what parameters are available in the API documentation.
+Changing the parameters of the font is as easy as creating it. Just call the `changeParams` method on the object returned by `createFont`. You can see what parameters are available in the API documentation.
 
 Here you go! You've created a font and are ready to customize it.
 
@@ -129,26 +138,30 @@ A promise that resolve to a `PtypoFont` object. This object is used to manipulat
 
 ## PtypoFont class
 
-### PtypoFont.changeParam
-
-Ptypo.changeParam( *paramName*, *paramValue* )
-
-#### Arguments 
-
-| name     | type   | description            |
-|----------|--------|------------------------|
-| paramName | string | The name of the parameter to be changed| 
-| paramValue | number | The new value of the parameter specified | 
-
 ### PtypoFont.changeParams
 
-Ptypo.changeParams( *paramObject* )
+Ptypo.changeParams( *paramObject* , *subset* )
 
 #### Arguments 
 
 | name     | type   | description            |
 |----------|--------|------------------------|
 | paramObject | Object | an object of the shape `paramName: paramValue` containing the name of the values to be changed and their values| 
+| subset | string | a string containing all the glyphs you want computed for your font. It is recommended to compute only the characters necessary to write your text to speed up computation| 
+
+### PtypoFont.getArrayBuffer
+
+Ptypo.getArrayBuffer( *merge* )
+
+#### Arguments 
+
+| name     | type   | description            |
+|----------|--------|------------------------|
+| merge | boolean | this parameters should be set to false | 
+
+### Return value
+
+a javascript ArrayBuffer containing the font
 
 ### PtypoFont.values
 
@@ -222,20 +235,22 @@ Ok let's get crafty for this second example. You can check how the titles resize
 ### Creating the fonts and initialization
 
 ```javascript
-ptypoFactory.createFont('titleFont', Ptypo.templateNames.GROTESK).then(function(font) {
-  font.changeParams({
-    //Params
-  });
-});
+ptypoFontFactory.init().then(function() {
+	ptypoFactory.createFont('titleFont', Ptypo.templateNames.GROTESK).then(function(font) {
+	  font.changeParams({
+	    //Params
+	  });
+	});
 
-ptypoFactory.createFont('subFont', Ptypo.templateNames.GROTESK).then(function(font) {
-  font.changeParams({
-    //Params
-  });
-});
+	ptypoFactory.createFont('subFont', Ptypo.templateNames.GROTESK).then(function(font) {
+	  font.changeParams({
+	    //Params
+	  });
+	});
 
-ptypoFactory.createFont('textFont', Ptypo.templateNames.ELZEVIR).then(function(font) {
-  font.changeParam('thickness', 60);
+	ptypoFactory.createFont('textFont', Ptypo.templateNames.ELZEVIR).then(function(font) {
+	  font.changeParam('thickness', 60);
+	});
 });
 ```
 
@@ -249,32 +264,34 @@ We start By creating three fonts. Two for the different level of headings and on
 ```
 
 ```javascript
-//Base width for the font
-ptypoFactory.createFont('titleFont', Ptypo.templateNames.GROTESK).then(function(font) {
-  font.changeParams({
-    'xHeight': 602,
-    'thickness': 160,
-    'capDelta': 280,
-    'ascender': 310,
-    'aperture': 1.2,
-    'spacing': 0.8,
-    'width': 0
-  });
+ptypoFontFactory.init().then(function() {
+	//Base width for the font
+	ptypoFactory.createFont('titleFont', Ptypo.templateNames.GROTESK).then(function(font) {
+	  font.changeParams({
+	    'xHeight': 602,
+	    'thickness': 160,
+	    'capDelta': 280,
+	    'ascender': 310,
+	    'aperture': 1.2,
+	    'spacing': 0.8,
+	    'width': 0
+	  });
 
-  console.log('w1', document.getElementById('test-font-width').clientWidth);
+	  console.log('w1', document.getElementById('test-font-width').clientWidth);
 
-  //Second that helps us find the function to compute the width of the text
-  //with respect to the width parameters
-  font.changeParams({
-    'xHeight': 602,
-    'thickness': 160,
-    'capDelta': 280,
-    'ascender': 310,
-    'aperture': 1.2,
-    'spacing': 0.8,
-    'width': 1
-  });
-  console.log('w2', document.getElementById('test-font-width').clientWidth);
+	  //Second that helps us find the function to compute the width of the text
+	  //with respect to the width parameters
+	  font.changeParams({
+	    'xHeight': 602,
+	    'thickness': 160,
+	    'capDelta': 280,
+	    'ascender': 310,
+	    'aperture': 1.2,
+	    'spacing': 0.8,
+	    'width': 1
+	  });
+	  console.log('w2', document.getElementById('test-font-width').clientWidth);
+	});
 });
 ```
 Using this we get two width value for the heading, which we will call w1 and w2 respectively. Here is the theoretical width of the text given the width parameter:
