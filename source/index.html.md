@@ -151,13 +151,13 @@ Ptypo.changeParams( *paramObject* , *subset* )
 
 ### PtypoFont.getArrayBuffer
 
-Ptypo.getArrayBuffer( *merge* )
+Ptypo.getArrayBuffer( params )
 
 #### Arguments 
 
 | name     | type   | description            |
 |----------|--------|------------------------|
-| merge | boolean | this parameters should be set to false | 
+| params | object | options for the generation of the font. Should at least have the property merge set to false.| 
 
 ### Return value
 
